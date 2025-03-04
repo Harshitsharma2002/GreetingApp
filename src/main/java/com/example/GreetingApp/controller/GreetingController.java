@@ -8,17 +8,15 @@ import com.example.GreetingApp.service.GreetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/greetings")
 public class GreetingController {
 
-    private static final Logger logger = LoggerFactory.getLogger(GreetingController.class);
-
     @Autowired
     private GreetingRepository greetingRepository;
+    @Autowired
+    private GreetingService greetingService;
 
     @GetMapping
     public List<Greeting> getGreetings(){
@@ -47,5 +45,11 @@ public class GreetingController {
     @GetMapping("/simple")
     public String getSimpleGreeting(){
         return simpleGreet.getSimpleGreeting();
+    }
+    @PostMapping("/save")
+    public Greeting saveGreeting(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName) {
+        return greetingService.saveGreeting(firstName, lastName);
     }
 }
