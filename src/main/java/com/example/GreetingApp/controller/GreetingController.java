@@ -4,6 +4,7 @@ package com.example.GreetingApp.controller;
 import com.example.GreetingApp.customException.ResourceNotFoundException;
 import com.example.GreetingApp.model.Greeting;
 import com.example.GreetingApp.repository.GreetingRepository;
+import com.example.GreetingApp.service.GreetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -26,13 +27,11 @@ public class GreetingController {
 
     @PostMapping
     public Greeting createGreeting(@RequestBody Greeting greeting){
-        logger.info("Received Greeting: " + greeting);
         return greetingRepository.save(greeting);
     }
 
     @PutMapping("/{id}")
     public Greeting updateGreeting(@PathVariable Long id, @RequestBody Greeting greetingDetails){
-        logger.info("Updating Greeting with ID: " + id);
         Greeting greeting = greetingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Greeting not found with id " + id));
         greeting.setMessage(greetingDetails.getMessage());
         return greetingRepository.save(greeting);
@@ -41,5 +40,12 @@ public class GreetingController {
     @DeleteMapping("/{id}")
     public void deleteGreeting(@PathVariable Long id){
         greetingRepository.deleteById(id);
+    }
+
+    @Autowired
+    private GreetingService simpleGreet;
+    @GetMapping("/simple")
+    public String getSimpleGreeting(){
+        return simpleGreet.getSimpleGreeting();
     }
 }
